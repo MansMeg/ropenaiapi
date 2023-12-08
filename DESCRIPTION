@@ -9,6 +9,6 @@ Description: The package contain easy functionality to access different parts of
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-Import:
+Imports:
   checkmate,
   httr
