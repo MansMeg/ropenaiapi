@@ -1,6 +1,7 @@
 #' Open AI Chat API
 #'
-#' @param propt Character string to supply to Open AI chat.
+#' @param messages Either a character string to supply to Open AI chat as role
+#' 'user' or a list of list with role and messages. See below for an example.
 #' @param openai_api_key An Open AI API key token.
 #' @param model The model to use. See details below.
 #' @param chat_args Further arguments to supply (excluding message and model).
@@ -21,14 +22,35 @@
 #' \dontrun{
 #' # Set the Open AI API token here:
 #' set_open_ai_api_key("[YOUR KEY GOES HERE]")
+#'
 #' # Test the API
 #' openai_chat("Who is Gustav Vasa?")
+#'
 #' # Test the API with specific arguments:
 #' openai_chat("Who is Gustav Vasa?", chat_args = list(temperature = 0))
+#'
+#' # For a more complex task:
+#' messages <- list(list(role = "system", "You are a historian that will respond in Swedish.")
+#'
 #' }
+#'
+#' @import checkmate
+#' @import httr
+#'
 #' @export
-openai_chat <- function(prompt, openai_api_key = get_openai_api_key(), model = "gpt-3.5-turbo", chat_args = NULL) {
-  checkmate::assert_string(prompt)
+openai_chat <- function(messages, openai_api_key = get_openai_api_key(), model = "gpt-3.5-turbo", chat_args = NULL) {
+  if(is.character(messages)) {
+    checkmate::assert_string(messages)
+    m <- list(list(
+      role = "user",
+      content = messages
+    ))
+  } else if(is.list(messages)) {
+    checkmate::assert_list(messages)
+    m <- messages
+  } else {
+    stop("'messages' is neither a character nor a list.")
+  }
   checkmate::assert_string(openai_api_key)
   if(nchar(openai_api_key) == 0) stop("No OpenAI API key supplied.")
   checkmate::assert_string(model)
@@ -41,13 +63,11 @@ openai_chat <- function(prompt, openai_api_key = get_openai_api_key(), model = "
     encode = "json",
     body = c(list(
       model = model,
-      messages = list(list(
-        role = "user",
-        content = prompt
-      ))),
+      messages = m),
       chat_args)
   )
   res <- httr::content(response)
+  if(!is.null(res$error)) stop(res$error$message, call. = FALSE)
   class(res) <- c("open_ai_chat_api", "open_ai_api", "list")
   res
 }

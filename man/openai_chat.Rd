@@ -5,21 +5,22 @@
 \title{Open AI Chat API}
 \usage{
 openai_chat(
-  prompt,
+  messages,
   openai_api_key = get_openai_api_key(),
   model = "gpt-3.5-turbo",
   chat_args = NULL
 )
 }
 \arguments{
+\item{messages}{Either a character string to supply to Open AI chat as role
+'user' or a list of list with role and messages. See below for an example.}
+
 \item{openai_api_key}{An Open AI API key token.}
 
 \item{model}{The model to use. See details below.}
 
 \item{chat_args}{Further arguments to supply (excluding message and model).
 See details below.}
-
-\item{propt}{Character string to supply to Open AI chat.}
 }
 \description{
 Open AI Chat API
@@ -39,9 +40,16 @@ Further arguments to the chat API can be found here:
 \dontrun{
 # Set the Open AI API token here:
 set_open_ai_api_key("[YOUR KEY GOES HERE]")
+
 # Test the API
 openai_chat("Who is Gustav Vasa?")
+
 # Test the API with specific arguments:
 openai_chat("Who is Gustav Vasa?", chat_args = list(temperature = 0))
+
+# For a more complex task:
+messages <- list(list(role = "system", "You are a historian that will respond in Swedish.")
+
 }
+
 }
