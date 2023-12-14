@@ -1,8 +1,8 @@
 Package: ropenaiapi
 Type: Package
 Title: Easy Access to the Open AI API
-Version: 0.1
-Date: 2023-12-08
+Version: 0.2.0
+Date: 2023-12-14
 Author: Mans Magnusson
 Maintainer: Mans Magnusson <mons.magnusson@gmail.com>
 Description: The package contain easy functionality to access different parts of the Open AI API. You still need toi have an account at Open AI and be able to generate API token for the package to function.
