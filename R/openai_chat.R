@@ -24,21 +24,34 @@
 #' set_open_ai_api_key("[YOUR KEY GOES HERE]")
 #'
 #' # Test the API
-#' openai_chat("Who is Gustav Vasa?")
+#' openai_chat("Who is Gustav Vasa?",
+#'             model = "gpt-3.5-turbo")
 #'
 #' # Test the API with specific arguments:
-#' openai_chat("Who is Gustav Vasa?", chat_args = list(temperature = 0))
+#' openai_chat("Who is Gustav Vasa?",
+#'             model = "gpt-3.5-turbo",
+#'             chat_args = list(temperature = 0))
+#' openai_chat("Who is Gustav Vasa?",
+#'              model = "gpt-3.5-turbo",
+#'              chat_args = list(seed = 4711))
 #'
 #' # For a more complex task:
-#' messages <- list(list(role = "system", "You are a historian that will respond in Swedish.")
-#'
+#' messages <-
+#'   list(list(role = "system",
+#'             content = "You are a historian that is very formal and
+#'                        answer with a short reply.
+#'                        End the reply with the sentence:
+#'                        'And so says the books'."),
+#'        list(role = "user",
+#'             content = "Who is Gustav Vasa?"))
+#' openai_chat(messages, model = "gpt-3.5-turbo")
 #' }
 #'
 #' @import checkmate
 #' @import httr
 #'
 #' @export
-openai_chat <- function(messages, openai_api_key = get_openai_api_key(), model = "gpt-3.5-turbo", chat_args = NULL) {
+openai_chat <- function(messages, openai_api_key = get_openai_api_key(), model, chat_args = NULL) {
   if(is.character(messages)) {
     checkmate::assert_string(messages)
     m <- list(list(
